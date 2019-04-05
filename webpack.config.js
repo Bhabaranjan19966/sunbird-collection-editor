@@ -26,6 +26,7 @@ const extract = require('extract-zip');
 const { exec } = require('child_process');
 const cpy = require('cpy');
 const gulp = require('gulp');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 
 /**
@@ -116,112 +117,112 @@ module.exports = (env, argv) => {
         },
         module: {
             rules: [{
-                    test: /\.js$/,
-                    loader: 'string-replace-loader',
-                    options: {
-                        multiple: CONFIG_STRING_REPLACE,
-                        strict: true
-                    }
-                },
-                {
-                    test: require.resolve('./app/bower_components/async/dist/async.min.js'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'async'
-                    }]
-                },
-                {
-                    test: require.resolve('jquery'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: '$'
-                    }]
-                },
-                {
-                    test: require.resolve('jquery'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'jQuery'
-                    }]
-                },
-                {
-                    test: require.resolve('./app/libs/eventbus.min.js'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'EventBus'
-                    }]
-                },
-                {
-                    test: require.resolve('./app/libs/please-wait.min.js'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'pleaseWait'
-                    }]
-                },
-                {
-                    test: require.resolve('./app/bower_components/fingerprintjs2/fingerprint2.js'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'Fingerprint2'
-                    }]
-                },
-                {
-                    test: require.resolve('./app/libs/ua-parser.min.js'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'UAParser'
-                    }]
-                },
-                {
-                    test: require.resolve('./app/bower_components/uuid/index.js'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: 'UUID'
-                    }]
-                },
-                {
-                    test: /\.(s*)css$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: false,
-                                minimize: true,
-                                "preset": "advanced",
-                                discardComments: {
-                                    removeAll: true
-                                }
-                            }
-                        }
-                    ]
-                },
-                {
-                    test: /\.(gif|png|jpe?g|svg)$/i,
-                    use: [
-                        'file-loader',
-                        {
-                            loader: 'url-loader',
-                            options: {
-                                limit: 50, //it's important
-                                outputPath: './images',
-                                name: '[name].[ext]',
-                            }
-                        },
-                    ],
-                },
-                {
-                    test: /\.(woff|woff2|eot|ttf|otf|svg|png)$/,
-                    use: [{
-                        loader: 'file-loader',
+                test: /\.js$/,
+                loader: 'string-replace-loader',
+                options: {
+                    multiple: CONFIG_STRING_REPLACE,
+                    strict: true
+                }
+            },
+            {
+                test: require.resolve('./app/bower_components/async/dist/async.min.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'async'
+                }]
+            },
+            {
+                test: require.resolve('jquery'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
+            },
+            {
+                test: require.resolve('jquery'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                }]
+            },
+            {
+                test: require.resolve('./app/libs/eventbus.min.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'EventBus'
+                }]
+            },
+            {
+                test: require.resolve('./app/libs/please-wait.min.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'pleaseWait'
+                }]
+            },
+            {
+                test: require.resolve('./app/bower_components/fingerprintjs2/fingerprint2.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'Fingerprint2'
+                }]
+            },
+            {
+                test: require.resolve('./app/libs/ua-parser.min.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'UAParser'
+                }]
+            },
+            {
+                test: require.resolve('./app/bower_components/uuid/index.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'UUID'
+                }]
+            },
+            {
+                test: /\.(s*)css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
                         options: {
-                            name: '[name].[ext]',
-                            outputPath: './fonts/',
-                            limit: 10000,
-                            fallback: 'responsive-loader'
+                            sourceMap: false,
+                            minimize: true,
+                            "preset": "advanced",
+                            discardComments: {
+                                removeAll: true
+                            }
                         }
-                    }]
-                },
+                    }
+                ]
+            },
+            {
+                test: /\.(gif|png|jpe?g|svg)$/i,
+                use: [
+                    'file-loader',
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 50, //it's important
+                            outputPath: './images',
+                            name: '[name].[ext]',
+                        }
+                    },
+                ],
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf|svg|png)$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: './fonts/',
+                        limit: 10000,
+                        fallback: 'responsive-loader'
+                    }
+                }]
+            },
             ]
         },
         plugins: [
@@ -245,38 +246,38 @@ module.exports = (env, argv) => {
             }),
             // copy the index.html and templated to eidtor filder
             new CopyWebpackPlugin([{
-                    from: './app/index.html',
-                    to: './[name].[ext]',
-                    toType: 'template'
-                },
-                {
-                    from: './app/bower_components/jquery/dist/jquery.min.js',
-                    to: './'
-                },
-                {
-                    from: './app/scripts/coreplugins.js',
-                    to: './'
-                },
-                {
-                    from: './deploy/gulpfile.js',
-                    to: './'
-                },
-                {
-                    from: './deploy/package.json',
-                    to: './'
-                },
-                {
-                    from: './app/libs/jquery-ui.min.js',
-                    to: './'
-                },
-                {
-                    from: './app/libs/semantic.min.js',
-                    to: './'
-                },
-                {
-                    from: './app/libs/contextmenu.min.js',
-                    to: './'
-                },
+                from: './app/index.html',
+                to: './[name].[ext]',
+                toType: 'template'
+            },
+            {
+                from: './app/bower_components/jquery/dist/jquery.min.js',
+                to: './'
+            },
+            {
+                from: './app/scripts/coreplugins.js',
+                to: './'
+            },
+            {
+                from: './deploy/gulpfile.js',
+                to: './'
+            },
+            {
+                from: './deploy/package.json',
+                to: './'
+            },
+            {
+                from: './app/libs/jquery-ui.min.js',
+                to: './'
+            },
+            {
+                from: './app/libs/semantic.min.js',
+                to: './'
+            },
+            {
+                from: './app/libs/contextmenu.min.js',
+                to: './'
+            },
 
             ]),
             new ImageminPlugin({
@@ -313,6 +314,13 @@ module.exports = (env, argv) => {
                 },
                 canPrint: true
             }),
+            new CompressionPlugin({
+                algorithm: 'gzip',
+                minRatio: 1,
+                filename(fileIterator) {
+                    return `${fileIterator.path}.gz`
+                }
+            }),
             new ZipPlugin({
                 path: path.join(__dirname, '.'),
                 filename: BUILD_FOLDER_NAME,
@@ -322,7 +330,7 @@ module.exports = (env, argv) => {
                     compress: true,
                     forceZip64Format: false,
                 },
-                pathMapper: function(assetPath) {
+                pathMapper: function (assetPath) {
                     console.log("AssesPath", assetPath)
                     if (assetPath.startsWith('gulpfile')) {
                         return path.join('.', path.basename(assetPath));
@@ -341,7 +349,7 @@ module.exports = (env, argv) => {
                     forceZip64Format: false,
                 },
             }),
-            new OnBuildSuccess(function(stats) {
+            new OnBuildSuccess(function (stats) {
                 if (env && env.channel.toUpperCase() === 'NPM_PACKAGE') {
                     build_npm_package();
                 }
@@ -370,7 +378,7 @@ module.exports = (env, argv) => {
 };
 
 function build_npm_package() {
-    extract(BUILD_FOLDER_NAME, { dir: path.resolve(__dirname, NPM_BUILD_FOLDER_NAME) }, function(err, res) {
+    extract(BUILD_FOLDER_NAME, { dir: path.resolve(__dirname, NPM_BUILD_FOLDER_NAME) }, function (err, res) {
         if (err) {
             console.error("Fails to extract", err)
             return
